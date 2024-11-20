@@ -271,8 +271,8 @@ $(LIBMAIN_S): $(OBJECTS)
 #Demo tools/utilities
 hashsum.exe: demos/hashsum.c tests/common.c $(LIBMAIN_S)
 	cl $(LTC_CFLAGS) demos/hashsum.c tests/common.c $(LIBMAIN_S) $(LTC_LDFLAGS) /Fe$@
-ltcrypt.exe: demos/ltcrypt.c $(LIBMAIN_S)
-	cl $(LTC_CFLAGS) demos/ltcrypt.c tests/common.c $(LIBMAIN_S) $(LTC_LDFLAGS) /Fe$@
+crypt.exe: demos/crypt.c $(LIBMAIN_S)
+	cl $(LTC_CFLAGS) demos/crypt.c tests/common.c $(LIBMAIN_S) $(LTC_LDFLAGS) /Fe$@
 small.exe: demos/small.c $(LIBMAIN_S)
 	cl $(LTC_CFLAGS) demos/small.c tests/common.c $(LIBMAIN_S) $(LTC_LDFLAGS) /Fe$@
 tv_gen.exe: demos/tv_gen.c $(LIBMAIN_S)
@@ -289,7 +289,7 @@ test.exe: $(LIBMAIN_S) $(TOBJECTS)
 	cl $(LTC_CFLAGS) $(TOBJECTS) $(LIBMAIN_S) $(LTC_LDFLAGS) /Fe$@
 	@echo NOTICE: start the tests by launching test.exe
 
-all: $(LIBMAIN_S) hashsum.exe ltcrypt.exe small.exe tv_gen.exe sizes.exe constants.exe timing.exe test.exe
+all: $(LIBMAIN_S) hashsum.exe crypt.exe small.exe tv_gen.exe sizes.exe constants.exe timing.exe test.exe
 
 test: test.exe
 

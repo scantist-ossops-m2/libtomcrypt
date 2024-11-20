@@ -100,14 +100,14 @@ The following list does not claim to be complete resp. to be available across al
 | *empty target*/none given | c.f. `library`
 | `library` | builds only the library |
 | `hashsum` | builds the `hashsum` binary, similar to [`shasum`](https://linux.die.net/man/1/shasum), but with support for all hash-algorithms included in the library *\*4* |
-| `ltcrypt` | builds the `ltcrypt` binary, implementing something similar to [`crypt`](https://linux.die.net/man/3/crypt) *\*4* |
+| `crypt` | builds the `crypt` binary, implementing something similar to [`crypt`](https://linux.die.net/man/3/crypt) *\*4* |
 | `sizes` | builds the `sizes` binary, printing all internal data sizes on invocation *\*4* |
 | `constants` | builds the `constants` binary, printing all internal constants on invocation *\*4* |
 | `openssl-enc` | builds the `openssl-enc` binary, which is more or less compatible to [`openssl enc`](https://linux.die.net/man/1/enc) *\*4* *\*5* |
 | `test` | builds the `test` binary, which runs all algorithm self-tests + some extended tests *\*4* |
 | `timing` | builds the `timing` binary, which can be used to measure timings for algorithms and modes *\*4* |
 | `bins` | builds `hashsum` *\*4* |
-| `all_test` | builds `test`, `hashsum`, `ltcrypt`, `small`, `tv_gen`, `sizes` & `constants` *\*4* |
+| `all_test` | builds `test`, `hashsum`, `crypt`, `small`, `tv_gen`, `sizes` & `constants` *\*4* |
 | `docs` | builds the developer documentation `doc/crypt.pdf` |
 | `install` | installs the `library` and header files *\*7* *\*8* |
 | `install_bins` | installs the binaries created by the `bins` target *\*7* *\*8* |

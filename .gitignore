@@ -26,8 +26,8 @@ aesgcm
 aesgcm.exe
 constants
 constants.exe
-ltcrypt
-ltcrypt.exe
+crypt
+crypt.exe
 hashsum
 hashsum.exe
 multi
