@@ -336,7 +336,8 @@ install: $(LIBMAIN_S)
 #Install useful tools
 install_bins: hashsum
 	@mkdir -p $(DESTDIR)$(BINPATH)
-	@cp hashsum $(DESTDIR)$(BINPATH)/
+	@cp hashsum $(DESTDIR)$(BINPATH)/ltc-hashsum
+	@cp demos/ltc $(DESTDIR)$(BINPATH)/ltc
 
 #Install documentation
 install_docs: doc/crypt.pdf

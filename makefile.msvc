@@ -306,9 +306,9 @@ install: $(LIBMAIN_S)
 	copy /Y src\headers\tomcrypt*.h "$(PREFIX)\include"
 
 #Install useful tools
-install_bins: hashsum
+install_bins: hashsum.exe
 	cmd /c if not exist "$(PREFIX)\bin" mkdir "$(PREFIX)\bin"
-	copy /Y hashsum.exe "$(PREFIX)\bin"
+	copy /Y hashsum.exe "$(PREFIX)\bin\ltc-hashsum.exe"
 
 #Install documentation
 install_docs: doc/crypt.pdf

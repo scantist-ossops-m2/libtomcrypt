@@ -76,11 +76,16 @@ endef
 # by giving them as a parameter to make:
 #  make CFLAGS="-I./src/headers/ -DLTC_SOURCE ..." ...
 #
+# Also we're expecting that our users know what they do and if they use EXTRALIBS
+# they also gave the correct include paths.
+#
+ifndef EXTRALIBS
 ifneq ($(shell echo $(CFLAGS) | grep LTM_DESC),)
 LTC_CFLAGS+=$(shell PKG_CONFIG_PATH=$(LIBPATH)/pkgconfig pkg-config --cflags-only-I libtommath)
 endif
 ifneq ($(shell echo $(CFLAGS) | grep TFM_DESC),)
 LTC_CFLAGS+=$(shell PKG_CONFIG_PATH=$(LIBPATH)/pkgconfig pkg-config --cflags-only-I tomsfastmath)
+endif
 endif
 LTC_CFLAGS += -I./src/headers/ -DLTC_SOURCE -Wall -Wsign-compare -Wshadow
 
@@ -485,7 +490,8 @@ $(DESTDIR)$(BINPATH):
 	install -p -d $(DESTDIR)$(BINPATH)
 
 .common_install_bins: $(USEFUL_DEMOS) $(DESTDIR)$(BINPATH)
-	$(INSTALL_CMD) -p -m 775 $(USEFUL_DEMOS) $(DESTDIR)$(BINPATH)
+	for d in $(USEFUL_DEMOS); do $(INSTALL_CMD) -p -m 775 $$d $(DESTDIR)$(BINPATH)/ltc-$$d
+	$(INSTALL_CMD) -p -m 775 demos/ltc $(DESTDIR)$(BINPATH)
 
 install_docs: $(call print-help,install_docs,Installs the Developer Manual) doc/crypt.pdf
 	install -p -d $(DESTDIR)$(DATAPATH)

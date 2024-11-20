@@ -94,7 +94,7 @@ test: $(call print-help,test,Builds the library and the 'test' application to ru
 # build the demos from a template
 define DEMO_template
 $(1): $(call print-help,$(1),Builds the library and the '$(1)' demo) demos/$(1).o $$(LIBNAME)
-	$$(TGTLIBTOOL) --mode=link --tag=CC $$(CC) $$(LTC_LDFLAGS) $$^ $$(EXTRALIBS) -o $(1)
+	$$(TGTLIBTOOL) --mode=link --tag=CC $$(CC) $$(LTC_LDFLAGS) $$^ $$(EXTRALIBS) -o $$@
 endef
 
 $(foreach demo, $(strip $(DEMOS)), $(eval $(call DEMO_template,$(demo))))

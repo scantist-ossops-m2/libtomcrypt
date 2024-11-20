@@ -22,6 +22,7 @@ doc/crypt.pdf
 doc/refman.pdf
 
 # *nix/windows test executables
+ltc-*
 aesgcm
 aesgcm.exe
 constants

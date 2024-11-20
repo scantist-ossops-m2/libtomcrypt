@@ -3,79 +3,97 @@
 # -----------------------------------------------------------------------------
 option(BUILD_USEFUL_DEMOS "Build useful demos (hashsum)" FALSE)
 option(BUILD_USABLE_DEMOS "Build usable demos (crypt sizes constants pem-info)" FALSE)
+option(BUILD_BROKEN_DEMOS "Build broken demos (aesgcm openssh-privkey openssl-enc timing)" FALSE)
 option(BUILD_TEST_DEMOS "Build test demos (small tv_gen)" FALSE)
+
+option(INSTALL_DEMOS "Install enabled demos (USEFUL and/or USABLE) and ltc wrapper script" FALSE)
+option(INSTALL_BROKEN_DEMOS "Install broken demos and ltc wrapper script" FALSE)
 
 # -----------------------------------------------------------------------------
 # Useful demos
+#
+# Demos that are even somehow useful and could be installed as a system-tool
+#
+# * USEFUL_DEMOS   = hashsum
 # -----------------------------------------------------------------------------
 
 if(BUILD_USEFUL_DEMOS)
-
-    list(APPEND ALL_DEMOS_TARGETS hashsum)
-
-    # hashsum
-    add_executable(hashsum ${CMAKE_CURRENT_SOURCE_DIR}/hashsum.c)
-
-    target_link_libraries(hashsum PRIVATE ${PROJECT_NAME})
-
+    list(APPEND USABLE_DEMOS_TARGETS hashsum)
 endif()
 
 # -----------------------------------------------------------------------------
 # Usable demos
+#
+# Demos that are usable but only rarely make sense to be installed
+#
+# USEABLE_DEMOS  = crypt sizes constants pem-info
 # -----------------------------------------------------------------------------
 
 if(BUILD_USABLE_DEMOS)
+    list(APPEND USABLE_DEMOS_TARGETS crypt sizes constants pem-info)
+endif()
 
-    list(APPEND ALL_DEMOS_TARGETS crypt sizes constants pem-info)
+# -----------------------------------------------------------------------------
+# Broken demos
+#
+# Demos that are kind of useful, but in some way broken
+#
+# * aesgcm          - can't be built with LTC_EASY
+# * openssl-enc     - can't be built with LTC_EASY
+# * openssh-privkey - can't be built with LTC_EASY
+# * timing          - not really broken, but older gcc builds spit warnings
+#
+# BROKEN_DEMOS   = aesgcm openssl-enc openssh-privkey timing
+# -----------------------------------------------------------------------------
 
-    # ltcrypt
-    add_executable(crypt ${CMAKE_CURRENT_SOURCE_DIR}/crypt.c)
-
-    target_link_libraries(crypt PRIVATE ${PROJECT_NAME})
-
-    # sizes
-    add_executable(sizes ${CMAKE_CURRENT_SOURCE_DIR}/sizes.c)
-
-    target_link_libraries(sizes PRIVATE ${PROJECT_NAME})
-
-    # constants
-    add_executable(constants ${CMAKE_CURRENT_SOURCE_DIR}/constants.c)
-
-    target_link_libraries(constants PRIVATE ${PROJECT_NAME})
-
-    # pem-info
-    add_executable(pem-info ${CMAKE_CURRENT_SOURCE_DIR}/pem-info.c)
-
-    target_link_libraries(pem-info PRIVATE ${PROJECT_NAME})
-
+if(BUILD_BROKEN_DEMOS AND INSTALL_BROKEN_DEMOS)
+    list(APPEND USABLE_DEMOS_TARGETS aesgcm openssh-privkey openssl-enc timing)
+elseif(BUILD_BROKEN_DEMOS)
+    list(APPEND ALL_DEMOS_TARGETS aesgcm openssh-privkey openssl-enc timing)
 endif()
 
 # -----------------------------------------------------------------------------
 # Test demos
+#
+# Demos that are used for testing or measuring
+#
+# * TEST_DEMOS     = small tv_gen
 # -----------------------------------------------------------------------------
 
 if(BUILD_TEST_DEMOS)
-
-    list(APPEND ALL_DEMOS_TARGETS tv_gen)
-
-    # small
-    add_executable(small ${CMAKE_CURRENT_SOURCE_DIR}/small.c)
-
-    target_link_libraries(small PRIVATE ${PROJECT_NAME})
-
-    # tv_gen
-    add_executable(tv_gen ${CMAKE_CURRENT_SOURCE_DIR}/tv_gen.c)
-
-    target_link_libraries(tv_gen PRIVATE ${PROJECT_NAME})
-
+    list(APPEND ALL_DEMOS_TARGETS small tv_gen)
 endif()
+
+# -----------------------------------------------------------------------------
+# Generate executables
+# -----------------------------------------------------------------------------
+
+# USABLE_DEMOS can get installed, so they're prefixed with `ltc-`
+foreach(target ${USABLE_DEMOS_TARGETS})
+    list(APPEND ALL_DEMOS_INSTALL_TARGETS ltc-${target})
+
+    add_executable(ltc-${target} ${CMAKE_CURRENT_SOURCE_DIR}/${target}.c)
+
+    target_link_libraries(ltc-${target} PRIVATE ${PROJECT_NAME})
+endforeach()
+
+foreach(target ${ALL_DEMOS_TARGETS})
+    add_executable(${target} ${CMAKE_CURRENT_SOURCE_DIR}/${target}.c)
+
+    target_link_libraries(${target} PRIVATE ${PROJECT_NAME})
+endforeach()
 
 # -----------------------------------------------------------------------------
 # Install targets
 # -----------------------------------------------------------------------------
-install(
-    TARGETS ${ALL_DEMOS_TARGETS}
-    COMPONENT "runtime"
-    EXPORT ${TARGETS_EXPORT_NAME}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+if(INSTALL_DEMOS)
+    install(
+        TARGETS ${ALL_DEMOS_INSTALL_TARGETS}
+        COMPONENT "runtime"
+        EXPORT ${TARGETS_EXPORT_NAME}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+
+    # Also install the `ltc` wrapper script
+    install(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/ltc DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
